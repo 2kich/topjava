@@ -6,9 +6,9 @@ import ru.javawebinar.topjava.model.UserMealWithExceed;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * GKislin
@@ -30,21 +30,21 @@ public class UserMealsUtil {
 
     public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
 
-        List<UserMealWithExceed> userMealWithExceeds = new ArrayList<>();
-        List<UserMeal> userMealList = new ArrayList<>();
-        for (UserMeal userMeal : mealList) {
-            if (userMeal.getDateTime().toLocalTime().isAfter(startTime) && userMeal.getDateTime()
-                    .toLocalTime()
-                    .isBefore(endTime)) {
-                userMealList.add(userMeal);
-            }
-        }
+        List<UserMealWithExceed> userMealWithExceeds;
+        List<UserMeal> userMealList = mealList.stream()
+                .filter(userMeal -> userMeal.getDateTime()
+                        .toLocalTime()
+                        .isAfter(startTime) && userMeal.getDateTime()
+                        .toLocalTime()
+                        .isBefore(endTime))
+                .collect(Collectors.toList());
 
-        int sumOfCaloriesBetweenStartAndEndTimes = 0;
+        int sumOfCaloriesBetweenStartAndEndTimes;
         boolean isDietOverload;
-        for (UserMeal userMeal : userMealList) {
-            sumOfCaloriesBetweenStartAndEndTimes += userMeal.getCalories();
-        }
+
+        sumOfCaloriesBetweenStartAndEndTimes = userMealList.stream()
+                .mapToInt(UserMeal::getCalories)
+                .sum();
 
         if (sumOfCaloriesBetweenStartAndEndTimes > caloriesPerDay) {
             isDietOverload = false;
@@ -52,13 +52,12 @@ public class UserMealsUtil {
             isDietOverload = true;
         }
 
-        for (UserMeal userMeal : userMealList) {
-            UserMealWithExceed meal = new UserMealWithExceed(userMeal.getDateTime(),
-                    userMeal.getDescription(),
-                    userMeal.getCalories(),
-                    isDietOverload);
-            userMealWithExceeds.add(meal);
-        }
+        userMealWithExceeds = userMealList.stream()
+                .map(userMeal -> new UserMealWithExceed(userMeal.getDateTime(),
+                        userMeal.getDescription(),
+                        userMeal.getCalories(),
+                        isDietOverload))
+                .collect(Collectors.toList());
 
         return userMealWithExceeds;
 
