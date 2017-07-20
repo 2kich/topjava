@@ -10,21 +10,25 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <h2>Meals</h2>
+<h4><a href="meals?action=create">Create</a></h4>
 
 <table border="2" style="background: cornsilk">
     <tr>
-        <th>Date</th>
+        <th>DateTime</th>
         <th>Description</th>
         <th>Calories</th>
+        <th>Update</th>
+        <th>Delete</th>
     </tr>
-    <c:forEach items="${requestScope.meals}" var="meal">
+    <c:forEach items="${requestScope.mealList}" var="meal">
 
         <tr style="color: ${meal.isExceed() ? 'darkgreen' : 'red'}">
-                <%--<td width="200">${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}</td>--%> <%--Just hard code for simle use--%>
+
             <td width="200">${f:formatLocalDateTime(meal.dateTime, 'yyyy-MM-dd HH:mm:ss')}</td>
             <td width="200">${meal.description}</td>
             <td width="200">${meal.calories}</td>
-
+            <td><a href="meals?action=update&id=${meal.id}">Update</a></td>
+            <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
         </tr>
     </c:forEach>
 </table>
