@@ -41,7 +41,7 @@ public class MealDaoImpl implements MealDao {
 
     @Override
     public List<Meal> getAll() {
-        return new ArrayList<Meal>(map.values());
+        return new ArrayList<>(map.values());
     }
 
     @Override

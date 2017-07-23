@@ -13,14 +13,17 @@
 
 
 <form name="editMeal" method="post" action="meals">
-    <input name="id" type="hidden" value="${meal.id}" />
+
+    <input name="id" type="hidden" value="${requestScope.meal.id}" />
     DateTime:
-    <input name="dateTime" type="datetime-local" value="${meal.dateTime}" /> <br/>
+    <input name="dateTime" type="datetime-local" value="${requestScope.meal.dateTime}" /> <br/>
     Description:
-    <input name="description" type="text" value="${meal.description}" /> <br/>
+    <input name="description" type="text" value="${requestScope.meal.description}" /> <br/>
     Calories:
-    <input name="calories" type="text" value="${meal.calories}" /> <br/>
+    <input name="calories" type="text" value="${requestScope.meal.calories}" /> <br/>
+
     <input name="save" type="submit" value="Save" />
+
 </form>
 
 </body>
