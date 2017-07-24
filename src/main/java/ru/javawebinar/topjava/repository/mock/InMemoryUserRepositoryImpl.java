@@ -4,14 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.NamedEntity;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryUserRepositoryImpl implements UserRepository {
@@ -21,7 +21,7 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) { // TODO: Shorter
         log.info("delete {}", id);
         if (repository.get(id) == null) {
             return false;
@@ -48,9 +48,11 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> getAll() { // TODO: Check how its work
         log.info("getAll");
-        return (List<User>) repository.values();
+        final List<User> list = new ArrayList<>(repository.values());
+        list.sort(Comparator.comparing(NamedEntity::getName));
+        return list;
     }
 
     @Override

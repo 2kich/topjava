@@ -24,4 +24,5 @@ public class NamedEntity extends BaseEntity {
     public String toString() {
         return String.format("Entity %s (%s, '%s')", getClass().getName(), id, name);
     }
+
 }
