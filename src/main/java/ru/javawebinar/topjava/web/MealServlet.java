@@ -33,7 +33,7 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
 
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
+        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id), // TODO Should be changed or with userId???
                 userId, LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.valueOf(request.getParameter("calories")));
@@ -58,7 +58,7 @@ public class MealServlet extends HttpServlet {
             case "update":
                 final Meal meal = "create".equals(action) ?
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000,
-                                userId) :
+                                userId) : // TODO Should be changed or with userId???
                         repository.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/meal.jsp").forward(request, response);
