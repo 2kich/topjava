@@ -18,27 +18,27 @@ public class MealServiceImpl implements MealService {
     private MealRepository repository;
 
     @Override
-    public Meal save(Meal meal) { //TODO Something wrong :c
-        return repository.save(meal,meal.getUserId());
+    public Meal save(Meal meal, int userId) {
+        return repository.save(meal,userId);
     }
 
     @Override
-    public void delete(int id) throws NotFoundException { //TODO Something wrong :c
-        checkNotFoundWithId(repository.delete(id,1), id);
+    public void delete(int id, int userId) throws NotFoundException {
+        checkNotFoundWithId(repository.delete(id,userId), id);
     }
 
     @Override
-    public Meal get(int id) throws NotFoundException { //TODO Something wrong :c
-        return checkNotFoundWithId(repository.get(id,1), id);
+    public Meal get(int id, int userId) throws NotFoundException {
+        return checkNotFoundWithId(repository.get(id,userId), id);
     }
 
     @Override
-    public void update(Meal meal) { //TODO Something wrong :c
-        repository.save(meal,meal.getUserId());
+    public void update(Meal meal, int userId) {
+        repository.save(meal,userId);
     }
 
     @Override
-    public Collection<Meal> getAll() { //TODO Something wrong :c
-        return repository.getAll(1);
+    public Collection<Meal> getAll(int userId) {
+        return repository.getAll(userId);
     }
 }
