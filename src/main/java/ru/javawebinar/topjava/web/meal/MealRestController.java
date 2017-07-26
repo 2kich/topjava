@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.web.meal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -8,34 +10,42 @@ import java.util.Collection;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.checkIdConsistent;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
+
 @Controller
-public class MealRestController extends AbstractMealController {
+public class MealRestController {
 
-//    @Autowired
-//    private MealService service;  // TODO Why do we need this?
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Override
+    @Autowired
+    private MealService service;
+
     public Collection<Meal> getAll() {
-        return super.getAll();
+        log.info("getAll");
+        return service.getAll();
     }
 
-    @Override
     public Meal get(int id) {
-        return super.get(id);
+        log.info("get {}", id);
+        return service.get(id);
     }
 
-    @Override
-    public Meal create(Meal meal) {
-        return super.create(meal);
+    public Meal create(Meal meal) { // TODO Should be validate???
+        log.info("create {}", meal);
+        checkNew(meal);
+        return service.save(meal);
     }
 
-    @Override
     public void delete(int id) {
-        super.delete(id);
+        log.info("delete {}", id);
+        service.delete(id);
     }
 
-    @Override
-    public void update(Meal meal, int id) {
-        super.update(meal, id);
+    public void update(Meal meal, int id) {  //TODO Should be validate???
+        log.info("update {} with id={}", meal, id);
+        checkIdConsistent(meal, id);
+        service.update(meal);
     }
+
 }

@@ -2,10 +2,14 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.repository.mock.InMemoryMealRepositoryImpl;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -22,10 +26,15 @@ public class MealServlet extends HttpServlet {
 
     private MealRepository repository;
 
+    private ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext(
+            "spring/spring-app.xml");
+    private MealRestController mealRestController;
+
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        repository = new InMemoryMealRepositoryImpl();
+        mealRestController = appCtx.getBean(MealRestController.class);
     }
 
     @Override
@@ -39,7 +48,7 @@ public class MealServlet extends HttpServlet {
                 Integer.valueOf(request.getParameter("calories")));
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        repository.save(meal,meal.getUserId()); // TODO Check meal.getUserId()???
+        mealRestController.create(meal);
         response.sendRedirect("meals");
     }
 
@@ -51,7 +60,7 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 int id = getId(request);
                 log.info("Delete {}", id);
-                repository.delete(id,1); // TODO Check 1???
+                mealRestController.delete(id);
                 response.sendRedirect("meals");
                 break;
             case "create":
@@ -59,7 +68,7 @@ public class MealServlet extends HttpServlet {
                 final Meal meal = "create".equals(action) ?
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000,
                                 1) : // TODO Should be changed or with userId???
-                        repository.get(getId(request),1); // TODO Check 1???
+                        mealRestController.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/meal.jsp").forward(request, response);
                 break;
@@ -67,7 +76,7 @@ public class MealServlet extends HttpServlet {
             default:
                 log.info("getAll");
                 request.setAttribute("meals",
-                        MealsUtil.getWithExceeded(repository.getAll(1), MealsUtil.DEFAULT_CALORIES_PER_DAY)); // TODO Check 1???
+                        MealsUtil.getWithExceeded(mealRestController.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY)); // TODO Check 1???
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
