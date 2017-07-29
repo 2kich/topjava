@@ -19,9 +19,13 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("forward to users");
 
-        int userId = Integer.parseInt(request.getParameter("select"));
+        String string = request.getParameter("select");
 
-        AuthorizedUser.setId(userId);
+        System.out.println("This is the number - " + string);
+
+//        int userId = Integer.parseInt(string);
+
+//        AuthorizedUser.setId(userId);
 
         request.getRequestDispatcher("/users.jsp").forward(request, response);
     }
