@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import ru.javawebinar.topjava.AuthorizedUser;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class UserServlet extends HttpServlet {
@@ -16,6 +18,11 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("forward to users");
+
+        int userId = Integer.parseInt(request.getParameter("select"));
+
+        AuthorizedUser.setId(userId);
+
         request.getRequestDispatcher("/users.jsp").forward(request, response);
     }
 }
