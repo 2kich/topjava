@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -82,6 +83,8 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) { //TODO check userId here!
-        return jdbcTemplate.query("SELECT * FROM meals WHERE datetime > startDate AND datetime < endDate",MEAL_ROW_MAPPER);
+        Timestamp st = Timestamp.valueOf(startDate);
+        Timestamp et = Timestamp.valueOf(endDate);
+        return jdbcTemplate.query("SELECT * FROM meals WHERE datetime > ? AND datetime < ?",MEAL_ROW_MAPPER,st,et);
     }
 }
