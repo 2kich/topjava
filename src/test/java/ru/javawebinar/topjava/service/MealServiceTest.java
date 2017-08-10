@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     static {
         SLF4JBridgeHandler.install();
     }
@@ -42,6 +47,8 @@ public class MealServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void testDeleteNotFound() throws Exception {
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("testDeleteNotFound NotFoundException occurs");
         service.delete(MEAL1_ID, 1);
     }
 
@@ -60,6 +67,8 @@ public class MealServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void testGetNotFound() throws Exception {
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("testDeleteNotFound NotFoundException occurs");
         service.get(MEAL1_ID, ADMIN_ID);
     }
 
@@ -72,6 +81,8 @@ public class MealServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void testUpdateNotFound() throws Exception {
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("testDeleteNotFound NotFoundException occurs");
         service.update(MEAL1, ADMIN_ID);
     }
 
